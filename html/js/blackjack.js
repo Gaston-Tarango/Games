@@ -1,5 +1,5 @@
 "use strict";
-alert("hi");
+
 var numCardsPulled = 0;
 
 var player = {
@@ -134,7 +134,7 @@ function endGame() {
         resetGame();
     }
     if (player.money === 0) {
-        document.getElementById("new-game-button").disabled = false;
+        document.getElementById("new-game-button").disabled = true;
         document.getElementById("hit-button").disabled = true;
         document.getElementById("stand-button").disabled = true;
         document.getElementById("message-board").innerHTML = "You lost!" + "<br>" + "You are out of money";
