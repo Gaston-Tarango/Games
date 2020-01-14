@@ -4,51 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Simple Simon</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <style>
-      h1 {
-          align-content: flex-end;
-      }
-
-      #container {
-          align-items: center;
-      }
-      .row {
-          height: 200px;
-          width: 400px;
-      }
-        #square1 {
-            background-color: yellow;
-        }
-        #square2 {
-            background-color: #0bcd01;
-        }
-      #square3 {
-          background-color: blue ;
-      }
-      #square4 {
-          background-color: red;
-      }
-    </style>
+    <link href="css/simon.css" rel="stylesheet">
 </head>
 <body>
-
-<h1>Simon Game</h1>
+<h1 id="level-title">Simon Game</h1>
 <div class="container">
-<div class="row">
+    <div class="row">
+        <div type="button" id="green" class="btn green">
+        </div>
 
-    <div  id="square1" class="col-sm-5 col-md-6">YELLOW</div>
-    <div id="square2"class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">GREEN</div>
-</div>
+        <div type="button" id="red" class="btn red">
+        </div>
+    </div>
 
-<div class="row">
-    <div id="square3"class="col-sm-6 col-md-5 col-lg-6">BLUE</div>
-    <div id="square4"class="col-sm-6 col-md-5 offset-md-2 col-lg-6 offset-lg-0">RED</div>
-</div>
-</div>
+    <div class="row">
+        <div type="button" id="yellow" class="btn yellow">
+        </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+        <div type="button" id="blue" class="btn blue">
+        </div>
+    </div>
+</div>
+<script>
+var buttonColors = ["red", "blue", "green", "yellow"];
+
+var gamePattern = [];
+var userClickedPattern = [];
+
+var started = false;
+var level = 0;
+
+$(document).keypress(function() {
+if (!started) {
+$("#level-title").text("Level " + level);
+nextSequence();
+started = true;
+}
+});
+
+$(".btn").click(function() {
+
+var userChosenColor = $(this).attr("id");
+userClickedPattern.push(userChosenColor);
+
+animatePress(userChosenColor);
+
+//pass in the index of the last answer in the user's sequence.
+checkAnswer(userClickedPattern.length-1);
+});
+
+function checkAnswer(currentLevel) {
+
+//check if the most recent user answer is the same as the game pattern.
+if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
+
+console.log("success");
+
+//additional check that they have finished their sequence
+if (userClickedPattern.length === gamePattern.length){
+
+setTimeout(function () {
+nextSequence();
+}, 1000);
+
+}
+
+} else {
+
+console.log("wrong");
+
+}
+
+}
+
+function nextSequence() {
+
+//reset the userClickedPattern to an empty array ready for the next level
+userClickedPattern = [];
+
+level++;
+$("#level-title").text("Level " + level);
+
+var randomNumber = Math.floor(Math.random() * 3);
+var randomChosenColor = buttonColors[randomNumber];
+gamePattern.push(randomChosenColor);
+
+$("#" + randomChosenColor).fadeIn(100).fadeOut(100).fadeIn(100);
+}
+
+function animatePress(currentColor) {
+    $("#" + currentColor).addClass("pressed");
+    setTimeout(function () {
+        $("#" + currentColor).removeClass("pressed");
+    }, 100);
+}
+</script>
+
+<!--<script src="js/jquery-2.2.4"></script>-->
+
 </body>
 </html>
